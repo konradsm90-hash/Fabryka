@@ -1,48 +1,49 @@
 <?php include resource_path('views/layouts/header.php'); ?>
 
-<div class="mb-6 flex justify-between items-center">
-    <div>
-        <a href="<?= route('listy-plac.index') ?>" class="text-sm text-gray-500 hover:underline">&larr; Powrót do listy</a>
-        <h2 class="text-2xl font-bold mt-1">Lista Płac #<?= htmlspecialchars($lista->id) ?> (<?= sprintf('%02d', $lista->miesiac) ?>/<?= htmlspecialchars($lista->rok) ?>)</h2>
-    </div>
-    <div class="text-right">
-        <span class="text-sm text-gray-500">Suma Razem:</span>
-        <div class="text-2xl font-bold text-green-600"><?= number_format($lista->suma_brutto, 2, ',', ' ') ?> zł</div>
-    </div>
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">Listy Płac</h2>
+
+    <form action="<?= route('listy-plac.przelicz') ?>" method="POST" class="flex gap-2 bg-white p-2 rounded shadow">
+        <?= csrf_field() ?>
+        <input type="number" name="rok" value="2025" class="border p-1 rounded w-20 text-center" required>
+        <input type="number" name="miesiac" value="1" min="1" max="12" class="border p-1 rounded w-16 text-center" required>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Przelicz okres</button>
+    </form>
 </div>
 
-<div class="bg-white rounded-lg shadow overflow-x-auto">
-    <table class="w-full text-left text-sm border-collapse">
+<div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="w-full text-left border-collapse">
         <thead>
-            <tr class="bg-gray-50 border-b text-gray-600 text-xs uppercase">
-                <th class="p-3">Pracownik</th>
-                <th class="p-3">Stawka</th>
-                <th class="p-3 text-center">Godz. Podst.</th>
-                <th class="p-3 text-center">Nadgodziny</th>
-                <th class="p-3 text-center">Nocne</th>
-                <th class="p-3 text-right">Korekta Retro</th>
-                <th class="p-3 text-right">Brutto Razem</th>
+            <tr class="bg-gray-50 border-b text-gray-600 uppercase text-xs">
+                <th class="p-4">ID</th>
+                <th class="p-4">Okres</th>
+                <th class="p-4">Status</th>
+                <th class="p-4 text-right">Suma Brutto</th>
+                <th class="p-4 text-center">Akcja</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-            <?php foreach ($lista->pozycje as $p): ?>
-            <tr class="hover:bg-gray-50">
-                <td class="p-3 font-medium">
-                    <?= htmlspecialchars($p->pracownik->imie) ?> <?= htmlspecialchars($p->pracownik->nazwisko) ?>
-                    <div class="text-xs text-gray-400 font-mono"><?= htmlspecialchars($p->pracownik->numer_kart_rcp) ?></div>
-                </td>
-                <td class="p-3"><?= number_format($p->zastosowana_stawka_bazowa, 2, ',', ' ') ?> zł/h</td>
-                <td class="p-3 text-center"><?= htmlspecialchars($p->godziny_podstawowe) ?>h</td>
-                <td class="p-3 text-center">
-                    <span class="text-blue-600">+<?= htmlspecialchars($p->godziny_nadgodziny_50 + $p->godziny_nadgodziny_100) ?>h</span>
-                </td>
-                <td class="p-3 text-center"><?= htmlspecialchars($p->godziny_nocne) ?>h</td>
-                <td class="p-3 text-right <?= $p->kwota_korekty_retro != 0 ? 'font-bold text-amber-600' : 'text-gray-400' ?>">
-                    <?= number_format($p->kwota_korekty_retro, 2, ',', ' ') ?> zł
-                </td>
-                <td class="p-3 text-right font-bold"><?= number_format($p->kwota_brutto_razem, 2, ',', ' ') ?> zł</td>
-            </tr>
-            <?php endforeach; ?>
+            <?php if (!empty($listy) && count($listy) > 0): ?>
+                <?php foreach ($listy as $l): ?>
+                <tr class="hover:bg-gray-50">
+                    <td class="p-4 font-mono">#<?= htmlspecialchars($l->id) ?></td>
+                    <td class="p-4 font-semibold"><?= sprintf('%02d', $l->miesiac) ?>/<?= htmlspecialchars($l->rok) ?></td>
+                    <td class="p-4">
+                        <span class="px-2 py-1 text-xs font-semibold rounded <?= ($l->status ?? '') === 'ZAMKNIETA' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' ?>">
+                            <?= htmlspecialchars($l->status ?? 'SZKIC') ?>
+                        </span>
+                    </td>
+                    <td class="p-4 text-right font-bold"><?= number_format($l->suma_brutto ?? 0, 2, ',', ' ') ?> zł</td>
+                    <td class="p-4 text-center">
+                        <a href="<?= route('listy-plac.show', $l->id) ?>" class="text-blue-600 hover:underline">Szczegóły</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" class="p-4 text-center text-gray-500">Brak wygenerowanych list płac. Użyj formularza powyżej, aby przeliczyć okres.</td>
+                </tr>
+            <?php endif; ?>
         </tbody>
     </table>
 </div>
