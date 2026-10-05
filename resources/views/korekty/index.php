@@ -1,19 +1,18 @@
-@extends('layouts.app')
+<?php include resource_path('views/layouts/header.php'); ?>
 
-@section('content')
 <h2 class="text-2xl font-bold mb-6">Korekty i Ręczne Dopisywanie Odbić</h2>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="bg-white p-6 rounded shadow col-span-1">
         <h3 class="text-lg font-bold mb-4">Dodaj / Popraw odbicie</h3>
-        <form action="{{ route('korekty.store') }}" method="POST" class="space-y-4">
-            @csrf
+        <form action="<?= route('korekty.store') ?>" method="POST" class="space-y-4">
+            <?= csrf_field() ?>
             <div>
                 <label class="block text-sm font-medium mb-1">Pracownik</label>
                 <select name="pracownik_id" class="w-full border p-2 rounded" required>
-                    @foreach($pracownicy as $p)
-                        <option value="{{ $p->id }}">{{ $p->imie }} {{ $p->nazwisko }} ({{ $p->numer_kart_rcp }})</option>
-                    @endforeach
+                    <?php foreach ($pracownicy as $p): ?>
+                        <option value="<?= htmlspecialchars($p->id) ?>"><?= htmlspecialchars($p->imie) ?> <?= htmlspecialchars($p->nazwisko) ?> (<?= htmlspecialchars($p->numer_kart_rcp) ?>)</option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -53,20 +52,21 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                @foreach($ostatnieOdbicia as $o)
+                <?php foreach ($ostatnieOdbicia as $o): ?>
                 <tr class="hover:bg-gray-50">
-                    <td class="p-2 font-mono">{{ $o->czas_odbicia }}</td>
-                    <td class="p-2">{{ $o->pracownik->imie }} {{ $o->pracownik->nazwisko }}</td>
+                    <td class="p-2 font-mono"><?= htmlspecialchars($o->czas_odbicia) ?></td>
+                    <td class="p-2"><?= htmlspecialchars($o->pracownik->imie) ?> <?= htmlspecialchars($o->pracownik->nazwisko) ?></td>
                     <td class="p-2 font-semibold text-xs">
-                        <span class="px-2 py-0.5 rounded {{ str_contains($o->typ, 'WEJSCIE') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            {{ $o->typ }}
+                        <span class="px-2 py-0.5 rounded <?= str_contains($o->typ, 'WEJSCIE') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>">
+                            <?= htmlspecialchars($o->typ) ?>
                         </span>
                     </td>
-                    <td class="p-2 text-xs text-gray-500">{{ $o->zrodlo }}</td>
+                    <td class="p-2 text-xs text-gray-500"><?= htmlspecialchars($o->zrodlo) ?></td>
                 </tr>
-                @endforeach
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
-@endsection
+
+<?php include resource_path('views/layouts/footer.php'); ?>

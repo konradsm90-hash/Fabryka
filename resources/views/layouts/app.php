@@ -11,23 +11,18 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold tracking-wide">Fabryka</h1>
             <div class="space-x-4">
-                <a href="{{ route('listy-plac.index') }}" class="hover:text-blue-300 font-medium">Listy Płac</a>
-                <a href="{{ route('grafik.index') }}" class="hover:text-blue-300 font-medium">Grafik i Naruszenia</a>
-                <a href="{{ route('korekty.index') }}" class="hover:text-blue-300 font-medium">Korekty RCP</a>
-                <a href="{{ route('nieobecnosci.index') }}" class="hover:text-blue-300 font-medium">Nieobecności</a>
-                <a href="{{ route('raporty.index') }}" class="hover:text-blue-300 font-medium">Raporty i Koszty</a>
+                <a href="<?= route('listy-plac.index') ?>" class="hover:text-blue-300 font-medium">Listy Płac</a>
+                <a href="<?= route('grafik.index') ?>" class="hover:text-blue-300 font-medium">Grafik i Naruszenia</a>
+                <a href="<?= route('korekty.index') ?>" class="hover:text-blue-300 font-medium">Korekty RCP</a>
+                <a href="<?= route('nieobecnosci.index') ?>" class="hover:text-blue-300 font-medium">Nieobecności</a>
+                <a href="<?= route('raporty.index') ?>" class="hover:text-blue-300 font-medium">Raporty i Koszty</a>
             </div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto p-6 flex-grow w-full">
-        @if(session('success'))
+        <?php if (session('success')): ?>
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-                {{ session('success') }}
+                <?= htmlspecialchars(session('success')) ?>
             </div>
-        @endif
-
-        @yield('content')
-    </main>
-</body>
-</html>
+        <?php endif; ?>

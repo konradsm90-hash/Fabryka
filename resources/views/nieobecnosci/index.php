@@ -1,19 +1,18 @@
-@extends('layouts.app')
+<?php include resource_path('views/layouts/header.php'); ?>
 
-@section('content')
 <h2 class="text-2xl font-bold mb-6">Zarządzanie Nieobecnościami i L4</h2>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="bg-white p-6 rounded shadow col-span-1">
         <h3 class="text-lg font-bold mb-4">Zgłoś nieobecność</h3>
-        <form action="{{ route('nieobecnosci.store') }}" method="POST" class="space-y-4">
-            @csrf
+        <form action="<?= route('nieobecnosci.store') ?>" method="POST" class="space-y-4">
+            <?= csrf_field() ?>
             <div>
                 <label class="block text-sm font-medium mb-1">Pracownik</label>
                 <select name="pracownik_id" class="w-full border p-2 rounded" required>
-                    @foreach($pracownicy as $p)
-                        <option value="{{ $p->id }}">{{ $p->imie }} {{ $p->nazwisko }}</option>
-                    @endforeach
+                    <?php foreach ($pracownicy as $p): ?>
+                        <option value="<?= htmlspecialchars($p->id) ?>"><?= htmlspecialchars($p->imie) ?> <?= htmlspecialchars($p->nazwisko) ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -53,16 +52,17 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                @foreach($nieobecnosci as $n)
+                <?php foreach ($nieobecnosci as $n): ?>
                 <tr class="hover:bg-gray-50">
-                    <td class="p-2 font-medium">{{ $n->pracownik->imie }} {{ $n->pracownik->nazwisko }}</td>
-                    <td class="p-2 font-semibold text-xs">{{ $n->typ }}</td>
-                    <td class="p-2 text-xs font-mono">{{ $n->data_od }} do {{ $n->data_do }}</td>
-                    <td class="p-2"><span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded">{{ $n->status }}</span></td>
+                    <td class="p-2 font-medium"><?= htmlspecialchars($n->pracownik->imie) ?> <?= htmlspecialchars($n->pracownik->nazwisko) ?></td>
+                    <td class="p-2 font-semibold text-xs"><?= htmlspecialchars($n->typ) ?></td>
+                    <td class="p-2 text-xs font-mono"><?= htmlspecialchars($n->data_od) ?> do <?= htmlspecialchars($n->data_do) ?></td>
+                    <td class="p-2"><span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded"><?= htmlspecialchars($n->status) ?></span></td>
                 </tr>
-                @endforeach
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
-@endsection
+
+<?php include resource_path('views/layouts/footer.php'); ?>

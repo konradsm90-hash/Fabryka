@@ -1,6 +1,5 @@
-@extends('layouts.app')
+<?php include resource_path('views/layouts/header.php'); ?>
 
-@section('content')
 <h2 class="text-2xl font-bold mb-6">Raporty i Zestawienia Analityczne</h2>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -15,17 +14,19 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                @forelse($daneKoszty as $k)
-                <tr class="hover:bg-gray-50">
-                    <td class="p-3 font-medium">{{ $k->zaklad ?? 'Główny' }} / {{ $k->dzial ?? 'Produkcja' }}</td>
-                    <td class="p-3 text-right">{{ $k->liczba_pracownikow ?? 0 }}</td>
-                    <td class="p-3 text-right font-bold text-slate-800">{{ number_format($k->suma_brutto ?? 0, 2, ',', ' ') }} zł</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="3" class="p-3 text-center text-gray-500">Przelicz listę płac, aby ujrzeć podsumowanie kosztów.</td>
-                </tr>
-                @endforelse
+                <?php if (count($daneKoszty) > 0): ?>
+                    <?php foreach ($daneKoszty as $k): ?>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 font-medium"><?= htmlspecialchars($k->zaklad ?? 'Główny') ?> / <?= htmlspecialchars($k->dzial ?? 'Produkcja') ?></td>
+                        <td class="p-3 text-right"><?= htmlspecialchars($k->liczba_pracownikow ?? 0) ?></td>
+                        <td class="p-3 text-right font-bold text-slate-800"><?= number_format($k->suma_brutto ?? 0, 2, ',', ' ') ?> zł</td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="3" class="p-3 text-center text-gray-500">Przelicz listę płac, aby ujrzeć podsumowanie kosztów.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -39,4 +40,5 @@
         </div>
     </div>
 </div>
-@endsection
+
+<?php include resource_path('views/layouts/footer.php'); ?>
