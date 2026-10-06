@@ -16,11 +16,12 @@ class Nieobecnosc extends Model
         'typ',
         'data_od',
         'data_do',
+        'liczba_dni_roboczych',
         'status',
     ];
 
     public function pracownik()
     {
-        return $this->belongsTo(Pracownik::class, 'pracownik_id');
+        return $this->belongsTo(Pracownik::class);
     }
 }

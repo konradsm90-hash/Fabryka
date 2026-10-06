@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ListaPlac;
 use App\Services\SilnikListyPlacService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\PlacaController;
 
 class PlacaController extends Controller
 {
@@ -34,5 +35,24 @@ class PlacaController extends Controller
         $silnik->przeliczMiesiac($request->rok, $request->miesiac);
 
         return redirect()->back()->with('success', 'Lista płac została przeliczona.');
+    }
+    public function masoweAkcje(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $akcja = $request->input('akcja');
+
+        if (empty($ids)) {
+            return back()->with('success', 'Nie wybrano żadnej listy płac.');
+        }
+
+        if ($akcja === 'ZAMKNIJ') {
+            \App\Models\ListaPlac::whereIn('id', $ids)->update(['status' => 'ZAMKNIETA']);
+        } elseif ($akcja === 'OTWORZ') {
+            \App\Models\ListaPlac::whereIn('id', $ids)->update(['status' => 'SZKIC']);
+        } elseif ($akcja === 'USUN') {
+            \App\Models\ListaPlac::whereIn('id', $ids)->where('status', '!=', 'ZAMKNIETA')->delete();
+        }
+
+        return back()->with('success', 'Zaktualizowano status wybranych list płac.');
     }
 }

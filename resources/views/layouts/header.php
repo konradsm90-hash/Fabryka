@@ -11,6 +11,7 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold tracking-wide">Fabryka</h1>
             <div class="space-x-4">
+                <a href="<?= route('pulpit') ?>" class="hover:text-blue-300 font-medium">Pulpit</a>
                 <a href="<?= route('listy-plac.index') ?>" class="hover:text-blue-300 font-medium">Listy Płac</a>
                 <a href="<?= route('grafik.index') ?>" class="hover:text-blue-300 font-medium">Grafik i Naruszenia</a>
                 <a href="<?= route('korekty.index') ?>" class="hover:text-blue-300 font-medium">Korekty RCP</a>

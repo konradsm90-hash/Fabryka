@@ -36,4 +36,22 @@ class KorektaController extends Controller
 
         return redirect()->back()->with('success', 'Korekta została pomyślnie dodana i zapisana w śladzie audytowym.');
     }
+
+    public function masoweAkcje(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $akcja = $request->input('akcja');
+
+        if (empty($ids)) {
+            return back()->with('success', 'Nie zaznaczono żadnych wpisów.');
+        }
+
+        if ($akcja === 'ZWERYFIKUJ') {
+            OdbicieRcp::whereIn('id', $ids)->update(['zrodlo' => 'KOREKTA_ZATWIERDZONA']);
+        } elseif ($akcja === 'USUN') {
+            OdbicieRcp::whereIn('id', $ids)->delete();
+        }
+
+        return back()->with('success', 'Wykonano akcję zbiorczą.');
+    }
 }
