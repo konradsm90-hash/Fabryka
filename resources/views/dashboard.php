@@ -8,6 +8,7 @@
     <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded text-xs font-semibold">Dzisiaj: <?= date('d.m.Y') ?></span>
 </div>
 
+<!-- Statystyki główne -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
     <!-- Obecni Dzisiaj -->
@@ -36,13 +37,31 @@
 
 </div>
 
+<!-- Sekcja Rekrutacji i CV (Dodana na Pulpicie) -->
+<div class="bg-white p-6 rounded shadow mb-8 border border-gray-200">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h3 class="text-lg font-bold text-gray-800"> Strefa Rekrutacji</h3>
+            <p class="text-sm text-gray-600 mt-1">Zarządzaj nadesłanymi aplikacjami kandydatów</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+            <a href="<?= route('rekrutacja.form') ?>" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md text-sm transition shadow-sm flex items-center gap-2">
+                📄 Formularz CV
+            </a>
+            <a href="<?= route('menadzer.login') ?>" class="bg-slate-800 hover:bg-slate-900 text-white font-medium px-4 py-2 rounded-md text-sm transition shadow-sm flex items-center gap-2">
+                🔒 Panel Menedżera (menadzer / 1234)
+            </a>
+        </div>
+    </div>
+</div>
+
 <!-- Sekcja Główna -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
     <!-- Wnioski oczekujące na akceptację  -->
     <div class="bg-white p-6 rounded shadow lg:col-span-2">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold text-gray-800">⏳ Wnioski oczekujące na akceptację</h3>
+            <h3 class="text-lg font-bold text-gray-800"> Wnioski oczekujące na akceptację</h3>
             <a href="<?= route('nieobecnosci.index') ?>" class="text-xs text-blue-600 hover:underline">Przejdź do wniosków</a>
         </div>
 

@@ -73,17 +73,37 @@ class ProdukcjaController extends Controller
         return view('panel-pracownika', compact('zadania'));
     }
 
-    public function generujZlecenie(Request $request)
+   public function generujZlecenie(Request $request)
     {
         if (Schema::hasTable('zadania_produkcyjne')) {
-            DB::table('zadania_produkcyjne')->insert([
+            $insertData = [
                 'nazwa' => $request->input('nazwa_zadania') ?? $request->input('nazwa', 'Nowe Zadanie'),
                 'opis' => $request->input('opis_wykonania') ?? $request->input('opis', ''),
                 'szacowany_czas_minut' => $request->input('szacowany_czas_minut', 30),
                 'status' => 'DO_ZROBIENIA',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]);
+            ];
+
+            if (Schema::hasColumn('zadania_produkcyjne', 'zlecenie_id')) {
+                $zlecenieId = null;
+                if (Schema::hasTable('zlecenia_produkcyjne')) {
+                    $zlecenieId = DB::table('zlecenia_produkcyjne')->value('id');
+                    if (!$zlecenieId) {
+                        $zlecenieId = DB::table('zlecenia_produkcyjne')->insertGetId([
+                            'nazwa' => 'Zlecenie Ogólne',
+                            'status' => 'AKTYWNE',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
+                if ($zlecenieId) {
+                    $insertData['zlecenie_id'] = $zlecenieId;
+                }
+            }
+
+            DB::table('zadania_produkcyjne')->insert($insertData);
         }
 
         return redirect()->back()->with('success', 'Pomyślnie dodano nowe zadanie.');
